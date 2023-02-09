@@ -10,7 +10,7 @@
         </div>
         <ul class="list">
           <li v-for="todo in todos" :key="todo.text">
-            <i class="far fa-check-square"></i>
+            <i :class="[todo.state === 'yet'? 'far':'fas' ,'fa-check-square']"></i>
             <span>
               {{ todo.text }}
               <b>
