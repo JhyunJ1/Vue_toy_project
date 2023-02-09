@@ -5,8 +5,8 @@
     <main>
       <div class="todos">
         <div class="write">
-          <input type="text"/>
-          <button class="btn add">Add</button>
+          <input type="text" v-model="addItemText"/>
+          <button class="btn add" @click="addItem">Add</button>
         </div>
         <ul class="list">
           <li v-for="todo in todos" :key="todo.text">
@@ -28,7 +28,8 @@
 <script>
 export default {
     data() {
-        return {     
+        return {
+            addItemText: '',
             todos:[
                 {text: '공부하기', state: 'yet'},
                 {text: '운동하기', state: 'done'},
@@ -36,6 +37,15 @@ export default {
             ]
         }
     },
+    methods: {
+        addItem() {
+            this.todos.push({
+                text: this.addItemText,
+                state: 'yet'
+            })
+        }
+    },
+
 }
 </script>
 
