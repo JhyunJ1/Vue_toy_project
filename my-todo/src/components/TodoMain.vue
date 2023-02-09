@@ -39,7 +39,7 @@ export default {
     },
     methods: {
         addItem() {
-            this.todos.push({
+            this.todos.unshift({
                 text: this.addItemText,
                 state: 'yet'
             })
