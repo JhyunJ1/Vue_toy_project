@@ -39,6 +39,7 @@ export default {
     },
     methods: {
         addItem() {
+            if (!this.addItemText) return;
             this.todos.unshift({
                 text: this.addItemText,
                 state: 'yet'
