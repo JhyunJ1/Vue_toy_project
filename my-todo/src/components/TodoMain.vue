@@ -4,15 +4,17 @@
     <header><h1>Vue Fire todo1</h1></header>
     <main>
       <div class="todos">
-        <div class="write" v-if="writeState"> <!-- 등록 -->
-          <input type="text" ref="writeArea" v-model="addItemText" @keyup.enter="addItem"/>
-          <button class="btn add" @click="addItem">Add</button>
-        </div>
-        <div class="write" v-else> <!-- 수정 -->
-          <input type="text" ref="writeArea" v-model="editItemText" @keyup.enter="addItem"/>
-          <button class="btn add" @click="editSave">Save</button>
-        </div>
-        <ul class="list">
+        <transition name="fade">
+            <div class="write add" v-if="writeState" key="add"> <!-- 등록 -->
+                <input type="text" ref="writeArea" v-model="addItemText" @keyup.enter="addItem"/>
+                <button class="btn add" @click="addItem">Add</button>
+            </div>
+            <div class="write edit" v-else key="edit"> <!-- 수정 -->
+                <input type="text" ref="writeArea" v-model="editItemText" @keyup.enter="addItem"/>
+                <button class="btn add" @click="editSave">Save</button>
+            </div>
+        </transition>
+        <ul class="list" ref="list">
           <li v-for="(todo, i) in todos" :key="i">
             <i 
             @click="checkItem(i)"
@@ -32,6 +34,9 @@
 </template>
 
 <script>
+import {db} from '../firebase/db';
+console.log(db)
+
 export default {
     data() {
         return {
@@ -39,16 +44,20 @@ export default {
             editItemText: '',
             crrEditItem: '',
             writeState: true,
-            todos:[
-                {text: '공부하기', state: 'yet'},
-                {text: '운동하기', state: 'done'},
-                {text: '글쓰기', state: 'done'},
-            ]
+            todos:[],
         }
     },
     methods: {
         addItem() {
             if (!this.addItemText) return;
+            db.collection('todos').add({
+                text: this.addItemText,
+                state: 'yet'
+            }).then(sn => {
+                db.collection('todos').doc(sn.id).update({
+                    id: sn.id
+                })
+            });
             this.todos.unshift({
                 text: this.addItemText,
                 state: 'yet'
@@ -67,17 +76,34 @@ export default {
             this.writeState = false;
             this.crrEditItem = i;
             this.editItemText = this.todos[i].text;
+            this.$refs.list.children[i].className = 'editing';
         },
         editSave() {
+            db.collection('todos')
+                .doc(this.todos[this.crrEditItem].id)
+                    .update({
+                        text: this.editItemText
+                    })
             this.todos[this.crrEditItem].text = this.editItemText;
             this.writeState = true;
+            this.$refs.list.children[this.crrEditItem].className = '';
         },
         delItem(i) {
+            db.collection('todos').doc(this.todos[i].id).delete()
             this.todos.splice(i, 1);
         }
     },
     mounted() {
         this.$refs.writeArea.focus();
+        db.collection('todos').get().then((result) => {
+            result.forEach((doc)=>{
+                console.log(doc.data())
+                this.todos.unshift(doc.data());
+    })
+});
+    },
+    firestore: {
+        todos: db.collection('todos')
     }
  
 }
