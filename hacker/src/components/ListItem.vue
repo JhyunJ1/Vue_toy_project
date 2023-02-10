@@ -5,16 +5,17 @@
         <b>{{ item.time_ago }}</b>
 
         <template v-if="$route.name ==='news'" ><!--실제로 dom에 태그가 생성되지 않는다.-->
-          <span>by <router-link :to="`/user/${item.user}`">{{ item.user }}</router-link></span><br/>
-          <a :href="item.url">{{ item.title }}<i>{{ item.comments_count }}</i></a>
+          by <span><router-link :to="`/user/${item.user}`">{{ item.user }}</router-link></span><br/>
+          <a :href="item.url">{{ item.title }}</a>
+          <router-link :to="`/item?id=${item.id}`"><i>{{ item.comments_count }}</i></router-link>
         </template>
         <template v-else-if="$route.name === 'ask'"><!--실제로 dom에 태그가 생성되지 않는다.-->
-          <span>by {{ item.user }}</span><br/>
+          by <span> <router-link :to="`/user/${item.user}`">{{ item.user }}</router-link></span><br/>
           <router-link :to="item.url">{{ item.title }}<i>{{ item.comments_count }}</i></router-link>
         </template>
         <template v-else><!--실제로 dom에 태그가 생성되지 않는다.-->
           <span>by {{ item.user }}</span><br/>
-          <a :href="item.url">{{ item.title }}<i>{{ item.comments_count }}</i></a>
+          <a :href="item.url">{{ item.title }}</a>
         </template>
 
       </li>

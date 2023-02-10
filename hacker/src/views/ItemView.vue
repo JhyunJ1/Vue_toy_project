@@ -10,9 +10,10 @@
         <br/><hr/><br/>
 
         <ul class="comment">
-            <li v-for="comment in askItem.comments">
+            <li v-for="comment in askItem.comments" :key="comment.id">
                 <i class="fas fa-arrow-right">{{ comment.user }}</i>
                 <div v-html="`${comment.content}`"></div>
+                <br/><hr/><br/>
             </li>
         </ul>
     </div>
