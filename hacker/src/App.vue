@@ -8,9 +8,10 @@ import ToolBar from "./components/ToolBar.vue"
 import NewsView from "./views/NewsView.vue"
 import AskView from "./views/AskView.vue";
 import JobsView from "./views/JobsView.vue";
+import ItemView from "./views/ItemView.vue"
 
 export default {
-  components: {ToolBar, NewsView, AskView, JobsView}
+  components: {ToolBar, NewsView, AskView, JobsView, ItemView}
 }
 </script>
 
